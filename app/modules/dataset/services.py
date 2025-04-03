@@ -32,6 +32,8 @@ logger = logging.getLogger(__name__)
 
 def calculate_checksum_and_size(file_path):
     file_size = os.path.getsize(file_path)
+    if "../" in file_path or "..\\" in file_path:
+        raise Exception("Invalid file path")
     with open(file_path, "rb") as file:
         content = file.read()
         hash_md5 = hashlib.md5(content).hexdigest()
