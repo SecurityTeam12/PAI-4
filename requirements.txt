@@ -17,7 +17,7 @@ charset-normalizer==3.3.2
 click==8.1.7
 ConfigArgParse==1.7
 coverage==7.6.0
-cryptography==44.0.1
+cryptography>=41.0.5,<43
 dd==0.6.0
 discord.py==2.4.0
 dnspython==2.6.1
@@ -73,7 +73,7 @@ pycparser==2.22
 pyflakes==3.2.0
 PyJWT==2.9.0
 PyMySQL==1.1.1
-pyOpenSSL==24.1.0
+pyOpenSSL>=24.1.0
 pyparsing==3.1.2
 PySocks==1.7.1
 pytest==8.3.3
