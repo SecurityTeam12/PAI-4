@@ -45,7 +45,7 @@ def test_token_generation_invalid_negative():
     token, error = api_service.generate_token(1, 'user@example.com', -10)
 
     assert token is None, "Token generation does not work properly."
-    assert type(error) is ValueError, "Expected ValueError, but received a different error."
+    assert isinstance(error, ValueError), "Expected ValueError, but received a different error."
 
 
 def test_api_configuration_page_get(test_client_with_token):
