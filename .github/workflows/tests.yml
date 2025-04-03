@@ -52,26 +52,6 @@ jobs:
       run: |
         pytest app/modules/ --ignore-glob='*selenium*'
 
-    - name: Run Tests for discordbot
-      env:
-        FLASK_ENV: testing
-        MARIADB_HOSTNAME: 127.0.0.1
-        MARIADB_PORT: 3306
-        MARIADB_DATABASE: uvlhubdb_test
-        MARIADB_TEST_DATABASE: uvlhubdb_test
-        MARIADB_USER: uvlhub_user
-        MARIADB_PASSWORD: uvlhub_password
-        MAIL_USERNAME: salmorejohub1@gmail.com
-        SECRET_KEY_JWT: ${{ secrets.SECRET_KEY_JWT }}
-        API_URL: http://127.0.0.1:5000/api/
-      run: |
-        flask db upgrade
-        rosemary db:migrate
-        rosemary db:seed
-        flask run --host=0.0.0.0 --reload --debug &
-        pytest discordbot/ --ignore-glob='*selenium*'
-      shell: bash
-
     - name: Run Tests for rosemary
       env:
         FLASK_ENV: testing
