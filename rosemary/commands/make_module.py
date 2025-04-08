@@ -23,6 +23,8 @@ def render_and_write_file(env, template_name, filename, context):
     """Renders a template and writes it to a specified file."""
     template = env.get_template(template_name)
     content = template.render(context) + "\n"
+    if '../' in filename or '..\\' in filename:
+        raise Exception('Invalid file path')
     with open(filename, 'w') as f:
         f.write(content)
 
@@ -69,6 +71,8 @@ def make_module(name):
     os.makedirs(os.path.join(module_path, 'assets'), exist_ok=True)
 
     # Create empty __init__.py file directly in the 'tests' directory.
+    if '../' in module_path or '..\\' in module_path:
+        raise Exception('Invalid file path')
     open(os.path.join(module_path, 'tests', '__init__.py'), 'a').close()
 
     # Render and write files, including 'test_unit.py' directly in 'tests'.
@@ -76,6 +80,8 @@ def make_module(name):
         if template_name:  # Check if there is a defined template.
             render_and_write_file(env, template_name, os.path.join(module_path, filename), {'module_name': name})
         else:
+            if '../' in module_path or '..\\' in module_path or '../' in filename or '..\\' in filename:
+                raise Exception('Invalid file path')
             open(os.path.join(module_path, filename), 'a').close()  # Create empty file if there is no template.
 
     click.echo(click.style(f"Module '{name}' created successfully.", fg='green'))
