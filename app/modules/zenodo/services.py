@@ -176,7 +176,7 @@ class ZenodoService(BaseService):
         response = requests.post(self.ZENODO_API_URL, params=self.params, json=data, headers=self.headers)
         if response.status_code != 201:
             error_message = f"Failed to create deposition. Error details: {response.json()}"
-            raise Exception(error_message)
+            raise ValueError(error_message)
         return response.json()
 
     def upload_file(self, dataset: DataSet, deposition_id: int, feature_model: FeatureModel, user=None) -> dict:
@@ -197,14 +197,14 @@ class ZenodoService(BaseService):
         user_id = current_user.id if user is None else user.id
         file_path = os.path.join(uploads_folder_name(), f"user_{str(user_id)}", f"dataset_{dataset.id}/", uvl_filename)
         if "../" in file_path or "..\\" in file_path:
-            raise Exception("Invalid file path")
+            raise ValueError("Invalid file path")
         files = {"file": open(file_path, "rb")}
 
         publish_url = f"{self.ZENODO_API_URL}/{deposition_id}/files"
         response = requests.post(publish_url, params=self.params, data=data, files=files)
         if response.status_code != 201:
             error_message = f"Failed to upload files. Error details: {response.json()}"
-            raise Exception(error_message)
+            raise ValueError(error_message)
         return response.json()
 
     def publish_deposition(self, deposition_id: int) -> dict:

@@ -80,7 +80,7 @@ def upload_file(deposition_id) -> tuple:
         return jsonify('File uploaded succesfully'), 201
     except Exception as e:
         error_message = f"Failed to upload files. Error details: {e}"
-        raise Exception(error_message)
+        raise ValueError(error_message)
 
 
 @api_bp.route('/api/fakenodo/depositions/<int:deposition_id>', methods=['GET', 'DELETE'])

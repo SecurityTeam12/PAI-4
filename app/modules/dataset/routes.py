@@ -344,7 +344,7 @@ def view_uvl(uvl_id):
 
     try:
         if '../' in file_path or '..\\' in file_path:
-            raise Exception('Invalid file path')
+            raise ValueError('Invalid file path')
         with open(file_path, 'r') as file:
             content = file.read()
     except FileNotFoundError:
