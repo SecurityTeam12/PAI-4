@@ -60,6 +60,8 @@ def view_file(file_id):
 
     try:
         if os.path.exists(file_path):
+            if '../' in file_path or '..\\' in file_path:
+                raise Exception('Invalid file path')
             with open(file_path, 'r') as f:
                 content = f.read()
 
