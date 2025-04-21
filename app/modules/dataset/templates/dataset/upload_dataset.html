@@ -128,7 +128,7 @@
                         <div class="row" style="padding-left: 2rem">
 
                             <div class="col-lg-6 col-12 mb-3">
-                                <label class="form-label">Author name</label>
+                                <label class="form-label" for="author-name">Author name</label>
                                 <input class="form-control"
                                        id="author-name"
                                        disabled
@@ -136,14 +136,14 @@
                             </div>
 
                             <div class="col-lg-6 col-12 mb-3">
-                                <label class="form-label">Author affiliation</label>
+                                <label class="form-label" for="author-affiliation">Author affiliation</label>
                                 <input class="form-control"
                                        id="author-affiliation"
                                        disabled value="{{ current_user.profile.affiliation }}">
                             </div>
 
                             <div class="col-lg-6 col-12 mb-3">
-                                <label class="form-label">Author ORCID</label>
+                                <label class="form-label" for="author-orcid">Author ORCID</label>
                                 <input class="form-control"
                                        id="author-orcid"
                                        disabled value="{{ current_user.profile.orcid }}">
@@ -476,7 +476,7 @@
                     Upload dataset</button>
 
                 <div id="loading" style="display: none">
-                    <img width="40px" src="{{ url_for("static", filename="gifs/loading.svg") }}"/>
+                    <img width="40px" alt="image" src="{{ url_for("static", filename="gifs/loading.svg") }}"/>
                     Uploading dataset, please wait...
                 </div>
 
