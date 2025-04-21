@@ -62,12 +62,12 @@
                             <div class="col-12">
                                 <a href="{{ dataset.get_uvlhub_doi() }}">{{ dataset.get_uvlhub_doi() }}</a>
                                  <div id="dataset_doi_uvlhub_{{ dataset.id }}" style="display: none">
-                                {{ dataset.get_uvlhub_doi() }}
-                            </div>
+                                    {{ dataset.get_uvlhub_doi() }}
+                                </div>
 
-                            <i data-feather="clipboard" class="center-button-icon"
-                               style="cursor: pointer"
-                               onclick="copyText('dataset_doi_uvlhub_{{ dataset.id }}')"></i>
+                                <button type="button" class="center-button-icon" style="background: none; border: none; cursor: pointer" onclick="copyText('dataset_doi_uvlhub_{{ dataset.id }}')">
+                                    <i data-feather="clipboard"></i>
+                                </button>
                             </div>
 
 

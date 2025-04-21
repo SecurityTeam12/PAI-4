@@ -171,11 +171,11 @@ var currentId = 0;
                     let checked_orcid = true;
                     if (Array.isArray(formData.author_orcid)) {
                         for (let orcid of formData.author_orcid) {
-                            orcid = orcid.trim();
-                            if (orcid !== '' && !isValidOrcid(orcid)) {
+                            let trimmedOrcid = orcid.trim();
+                            if (trimmedOrcid !== '' && !isValidOrcid(trimmedOrcid)) {
                                 hide_loading();
-                                write_upload_error("ORCID value does not conform to valid format: " + orcid);
-                                checked_orcid = false;
+                                write_upload_error("ORCID value does not conform to valid format: " + trimmedorcid);
+                                checked_Orcid = false;
                                 break;
                             }
                         }
@@ -185,8 +185,8 @@ var currentId = 0;
                     let checked_name = true;
                     if (Array.isArray(formData.author_name)) {
                         for (let name of formData.author_name) {
-                            name = name.trim();
-                            if (name === '') {
+                            let trimmedName = name.trim();
+                            if (trimmedName === '') {
                                 hide_loading();
                                 write_upload_error("The author's name cannot be empty");
                                 checked_name = false;
