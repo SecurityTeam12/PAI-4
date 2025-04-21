@@ -35,7 +35,7 @@ class DataSetSeeder(BaseSeeder):
         user2 = User.query.filter_by(email='user2@example.com').first()
 
         if not user1 or not user2:
-            raise Exception("Users not found. Please seed users first.")
+            raise ValueError("Users not found. Please seed users first.")
 
         # Create DSMetrics instances
         ds_metrics_list = [

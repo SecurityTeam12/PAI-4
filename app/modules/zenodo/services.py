@@ -130,7 +130,7 @@ class ZenodoService(BaseService):
         """
         response = requests.get(self.ZENODO_API_URL, params=self.params, headers=self.headers)
         if response.status_code != 200:
-            raise Exception("Failed to get depositions")
+            raise ValueError("Failed to get depositions")
         return response.json()
 
     def create_new_deposition(self, dataset: DataSet) -> dict:
@@ -218,7 +218,7 @@ class ZenodoService(BaseService):
         publish_url = f"{self.ZENODO_API_URL}/{deposition_id}/actions/publish"
         response = requests.post(publish_url, params=self.params, headers=self.headers)
         if response.status_code != 201:
-            raise Exception("Failed to publish deposition")
+            raise ValueError("Failed to publish deposition")
         return response.json()
 
     def get_deposition(self, deposition_id: int) -> dict:
@@ -234,7 +234,7 @@ class ZenodoService(BaseService):
         deposition_url = f"{self.ZENODO_API_URL}/{deposition_id}"
         response = requests.get(deposition_url, params=self.params, headers=self.headers)
         if response.status_code != 200:
-            raise Exception("Failed to get deposition")
+            raise ValueError("Failed to get deposition")
         return response.json()
 
     def get_doi(self, deposition_id: int) -> str:

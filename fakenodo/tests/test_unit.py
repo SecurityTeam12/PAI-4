@@ -131,7 +131,7 @@ def test_get_doi(test_client):
 def test_deposition_not_found(test_client):
     '''Test if deposition is not found for GET, DELETE, and Publish actions'''
 
-    with mock_service('get_deposition', side_effect=Exception("Not found")):
+    with mock_service('get_deposition', side_effect=ValueError("Not found")):
         response = test_client.get('/api/fakenodo/depositions/999')
         assert response.status_code == 404, response.data
         assert b'Cannot find deposition with id' in response.data
