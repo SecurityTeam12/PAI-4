@@ -15,11 +15,18 @@ def db_tables():
     mariadb_database = os.getenv('MARIADB_DATABASE')
     
     sql_command = "SHOW tables;"
-    maria_db_command = f'mysql -h{mariadb_hostname} -u{mariadb_user} -p{mariadb_password} {mariadb_database} -e "{sql_command}"'
         
     # Execute the command
     try:
-        subprocess.run(maria_db_command, shell=True, check=True)
+        subprocess.run([
+    'mysql',
+    f'-h{mariadb_hostname}',
+    f'-u{mariadb_user}',
+    f'-p{mariadb_password}',
+    mariadb_database,
+    '-e',
+    sql_command
+], check=True)
     except subprocess.CalledProcessError as e:
         click.echo(click.style(f"Error opening MariaDB console: {e}", fg='red'))
 
