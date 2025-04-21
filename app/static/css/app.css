@@ -11581,7 +11581,6 @@ text {
 .flatpickr-current-month .numInputWrapper {
   display: inline-block;
   width: 6ch;
-  width: 7ch\0;
 }
 .flatpickr-current-month .numInputWrapper span.arrowUp:after {
   border-bottom-color: rgba(0, 0, 0, 0.9);

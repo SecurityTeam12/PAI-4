@@ -4749,7 +4749,7 @@ fieldset:disabled .btn {
     50%/1em auto no-repeat;
   color: #147abb; /* Icono blanco por defecto */
   border: 1em;
-  border-color: 147abb;
+  border-color: #147abb;
   border-radius: 0.5rem;
   height: 1em;
   opacity: 1;
@@ -11950,7 +11950,6 @@ text {
 .flatpickr-current-month .numInputWrapper {
   display: inline-block;
   width: 6ch;
-  width: 7ch\0;
 }
 .flatpickr-current-month .numInputWrapper span.arrowUp:after {
   border-bottom-color: rgba(0, 0, 0, 0.9);
