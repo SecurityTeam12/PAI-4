@@ -13,7 +13,7 @@ def setup_jinja_env():
     """Configures and returns a Jinja environment."""
     env = Environment(
         loader=FileSystemLoader(searchpath="./rosemary/templates"),
-        autoescape=select_autoescape(['html', 'xml', 'j2'])
+        autoescape=select_autoescape(['html', 'xml', 'j2', 'py.j2', 'js.j2'])
     )
     env.filters['pascalcase'] = pascalcase
     return env
