@@ -29,7 +29,6 @@ def test_db_table_valid_table(mock_run, mock_getenv, mock_env_vars):
     assert result.exit_code == 0
     mock_run.assert_called_once_with(
         'mysql -hlocalhost -uuvlhubdb_user -puvlhubdb_password uvlhubdb_test -e "SELECT * FROM user LIMIT 5;"',
-        shell=True,
         check=True,
     )
 
