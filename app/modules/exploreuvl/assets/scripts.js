@@ -1,5 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     send_query();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryParam = urlParams.get('query');
+    const queryInput = document.getElementById('query');
+    if (queryParam && queryParam.trim() !== '') {
+        queryInput.value = queryParam;
+    }
+    queryInput.dispatchEvent(new Event('input', { bubbles: true }));
 });
 
 function toggleSections() {
@@ -229,12 +237,3 @@ function clearFilters() {
     document.getElementById('query').dispatchEvent(new Event('input', { bubbles: true }));
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const queryParam = urlParams.get('query');
-    const queryInput = document.getElementById('query');
-    if (queryParam && queryParam.trim() !== '') {
-        queryInput.value = queryParam;
-    }
-    queryInput.dispatchEvent(new Event('input', { bubbles: true }));
-});

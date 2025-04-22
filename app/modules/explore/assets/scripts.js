@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     send_query();
 });
 
+
+
 function send_query() {
     console.log("send query...");
 
@@ -31,10 +33,6 @@ function send_query() {
                 max_size: parseFloat(document.querySelector('#max_size').value),
                 size_unit: document.querySelector('#size_unit').value,
             };
-
-            function renderAuthor(author) {
-                return `<p class="p-0 m-0">${author.name}${author.affiliation ? ` (${author.affiliation})` : ''}${author.orcid ? ` (${author.orcid})` : ''}</p>`;
-            }
             
             function renderTag(tag) {
                 return `<span class="badge bg-primary me-1" style="cursor: pointer;" onclick="set_tag_as_query('${tag}')">${tag}</span>`;
@@ -94,27 +92,19 @@ function send_query() {
                                         <div class="col-md-4 col-12">
                                             <span class="text-secondary">Authors</span>
                                         </div>
-<<<<<<< HEAD
                                         <div class="col-md-8 col-12">
                                             ${dataset.authors.map(renderAuthor).join('')}
                                         </div>
 
-=======
-                                        <div class="col-md-8 col-12"></div>
->>>>>>> c272bb56ec5e5a117f56c9bf2c6f98aa5c58f748
                                     </div>
                                     <div class="row mb-2">
                                         <div class="col-md-4 col-12">
                                             <span class="text-secondary">Tags</span>
                                         </div>
-<<<<<<< HEAD
                                         <div class="col-md-8 col-12">
                                             ${dataset.tags.map(renderTag).join('')}
                                         </div>
 
-=======
-                                        <div class="col-md-8 col-12"></div>
->>>>>>> c272bb56ec5e5a117f56c9bf2c6f98aa5c58f748
                                     </div>
                                     <div class="row">
                                         <div class="col-md-4 col-12"></div>
@@ -138,10 +128,7 @@ function send_query() {
 
                         const authorsContainer = card.querySelector('.col-md-8.col-12:nth-of-type(2)');
                         dataset.authors.forEach(author => {
-                            const authorElement = document.createElement('p');
-                            authorElement.className = 'p-0 m-0';
-                            authorElement.textContent = `${author.name}${author.affiliation ? ` (${author.affiliation})` : ''}${author.orcid ? ` (${author.orcid})` : ''}`;
-                            authorsContainer.appendChild(authorElement);
+                            authorsContainer.appendChild(createAuthorElement(author));
                         });
 
                         const tagsContainer = card.querySelector('.col-md-8.col-12:nth-of-type(3)');
@@ -178,6 +165,13 @@ function set_tag_as_query(tagName) {
     const queryInput = document.getElementById('query');
     queryInput.value = tagName.trim();
     queryInput.dispatchEvent(new Event('input', {bubbles: true}));
+}
+
+function createAuthorElement(author) {
+    const element = document.createElement('p');
+    element.className = 'p-0 m-0';
+    element.textContent = `${author.name}${author.affiliation ? ` (${author.affiliation})` : ''}${author.orcid ? ` (${author.orcid})` : ''}`;
+    return element;
 }
 
 function set_publication_type_as_query(publicationType) {
