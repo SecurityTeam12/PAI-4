@@ -13,18 +13,14 @@ def db_console():
     mariadb_password = os.getenv('MARIADB_PASSWORD')
     mariadb_database = os.getenv('MARIADB_DATABASE')
 
-    # Build the command to connect to MariaDB
-    mariadb_connect_cmd = f'mysql -h{mariadb_hostname} -u{mariadb_user} -p{mariadb_password} {mariadb_database}'
-
-    # Execute the command
+    # Execute the command securely
     try:
         subprocess.run([
-    'mysql',
-    f'-h{mariadb_hostname}',
-    f'-u{mariadb_user}',
-    f'-p{mariadb_password}',
-    mariadb_database,
-    '-e'
-], check=True)
+            'mysql',
+            '-h', mariadb_hostname,
+            '-u', mariadb_user,
+            f'-p{mariadb_password}',
+            mariadb_database
+        ], check=True)
     except subprocess.CalledProcessError as e:
         click.echo(click.style(f"Error opening MariaDB console: {e}", fg='red'))
