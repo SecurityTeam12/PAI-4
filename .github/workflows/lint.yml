@@ -14,12 +14,13 @@ jobs:
       contents: write
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@ee0669b
+
       with:
         ref: ${{ github.head_ref}}
         
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@e9aba2c
       with:
         python-version: '3.x'
 
