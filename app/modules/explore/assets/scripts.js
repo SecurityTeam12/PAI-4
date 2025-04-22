@@ -32,6 +32,15 @@ function send_query() {
                 size_unit: document.querySelector('#size_unit').value,
             };
 
+            function renderAuthor(author) {
+                return `<p class="p-0 m-0">${author.name}${author.affiliation ? ` (${author.affiliation})` : ''}${author.orcid ? ` (${author.orcid})` : ''}</p>`;
+            }
+            
+            function renderTag(tag) {
+                return `<span class="badge bg-primary me-1" style="cursor: pointer;" onclick="set_tag_as_query('${tag}')">${tag}</span>`;
+            }
+            
+
             console.log(document.querySelector('#publication_type').value);
 
             fetch('/explore', {
@@ -95,9 +104,7 @@ function send_query() {
                                             </span>
                                         </div>
                                         <div class="col-md-8 col-12">
-                                            ${dataset.authors.map(author => `
-                                                <p class="p-0 m-0">${author.name}${author.affiliation ? ` (${author.affiliation})` : ''}${author.orcid ? ` (${author.orcid})` : ''}</p>
-                                            `).join('')}
+                                            ${dataset.authors.map(renderAuthor).join('')}
                                         </div>
 
                                     </div>
@@ -110,7 +117,7 @@ function send_query() {
                                             </span>
                                         </div>
                                         <div class="col-md-8 col-12">
-                                            ${dataset.tags.map(tag => `<span class="badge bg-primary me-1" style="cursor: pointer;" onclick="set_tag_as_query('${tag}')">${tag}</span>`).join('')}
+                                            ${dataset.tags.map(renderTag).join('')}
                                         </div>
 
                                     </div>
@@ -174,18 +181,15 @@ function clearFilters() {
     // Reset the search query
     let queryInput = document.querySelector('#query');
     queryInput.value = "";
-    // queryInput.dispatchEvent(new Event('input', {bubbles: true}));
 
     // Reset the publication type to its default value
     let publicationTypeSelect = document.querySelector('#publication_type');
     publicationTypeSelect.value = "any"; // replace "any" with whatever your default value is
-    // publicationTypeSelect.dispatchEvent(new Event('input', {bubbles: true}));
 
     // Reset the sorting option
     let sortingOptions = document.querySelectorAll('[name="sorting"]');
     sortingOptions.forEach(option => {
         option.checked = option.value == "newest"; // replace "default" with whatever your default value is
-        // option.dispatchEvent(new Event('input', {bubbles: true}));
     });
 
     // Reset the number of models and features filters
@@ -226,8 +230,6 @@ function clearFilters() {
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    //let queryInput = document.querySelector('#query');
-    //queryInput.dispatchEvent(new Event('input', {bubbles: true}));
 
     let urlParams = new URLSearchParams(window.location.search);
     let queryParam = urlParams.get('query');
