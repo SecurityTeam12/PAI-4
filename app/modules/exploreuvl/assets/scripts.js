@@ -18,10 +18,10 @@ function toggleSections() {
 }
 
 function send_query() {
+    console.log("send query...");
 
-    console.log("send query...")
-
-    document.getElementById('results').innerHTML = '';
+    const resultsContainer = document.getElementById('results');
+    resultsContainer.innerHTML = ''; // Clear previous results
     document.getElementById("results_not_found").style.display = "none";
     console.log("hide not found icon");
 
@@ -50,7 +50,6 @@ function send_query() {
                     sizeInBytes = sizeValue;
             }
 
-
             const searchCriteria = {
                 csrf_token: csrfToken,
                 query: document.querySelector('#query').value,
@@ -76,9 +75,9 @@ function send_query() {
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
-                    document.getElementById('results').innerHTML = '';
+                    resultsContainer.innerHTML = ''; // Clear results
 
-                    // results counter
+                    // Update results counter
                     const resultCount = data.length;
                     const resultText = resultCount === 1 ? 'Model' : 'Models';
                     document.getElementById('results_number').textContent = `${resultCount} ${resultText} found`;
@@ -90,117 +89,125 @@ function send_query() {
                         document.getElementById("results_not_found").style.display = "none";
                     }
 
-
+                    // Render each dataset
                     data.forEach(dataset => {
-                        let card = document.createElement('div');
+                        const card = document.createElement('div');
                         card.className = 'col-12';
-                        card.innerHTML = `
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <h3>${dataset.title}</h3>
-                                        <div>
-                                            <span class="badge bg-primary" style="cursor: pointer;" onclick="set_publication_type_as_query('${dataset.publication_type}')">${dataset.publication_type}</span>
-                                        </div>
-                                    </div>
-                                    <p class="text-secondary">${formatDate(dataset.publication_date)}</p>
 
-                                    <div class="row mb-2">
+                        const cardBody = document.createElement('div');
+                        cardBody.className = 'card-body';
 
-                                        <div class="col-md-4 col-12">
-                                            <span class=" text-secondary">
-                                                Description
-                                            </span>
-                                        </div>
-                                        <div class="col-md-8 col-12">
-                                            <p class="card-text">${dataset.description}</p>
-                                        </div>
+                        const titleRow = document.createElement('div');
+                        titleRow.className = 'd-flex align-items-center justify-content-between';
 
-                                    </div>
+                        const title = document.createElement('h3');
+                        title.textContent = dataset.title;
 
-                                    <div class="row mb-2">
+                        const badgeContainer = document.createElement('div');
+                        const badge = document.createElement('span');
+                        badge.className = 'badge bg-primary';
+                        badge.style.cursor = 'pointer';
+                        badge.textContent = dataset.publication_type;
+                        badge.onclick = () => set_publication_type_as_query(dataset.publication_type);
+                        badgeContainer.appendChild(badge);
 
-                                        <div class="col-md-4 col-12">
-                                            <span class=" text-secondary">
-                                                Authors
-                                            </span>
-                                        </div>
-                                        <div class="col-md-8 col-12">
-                                            ${dataset.authors.map(author => `
-                                                <p class="p-0 m-0">${author.name}${author.affiliation ? ` (${author.affiliation})` : ''}${author.orcid ? ` (${author.orcid})` : ''}</p>
-                                            `).join('')}
-                                        </div>
+                        titleRow.appendChild(title);
+                        titleRow.appendChild(badgeContainer);
 
-                                    </div>
+                        const publicationDate = document.createElement('p');
+                        publicationDate.className = 'text-secondary';
+                        publicationDate.textContent = formatDate(dataset.publication_date);
 
-                                    <div class="row mb-2">
+                        const descriptionRow = createRow('Description', dataset.description);
+                        const authorsRow = createRow('Authors', dataset.authors.map(author => `${author.name}${author.affiliation ? ` (${author.affiliation})` : ''}${author.orcid ? ` (${author.orcid})` : ''}`).join(', '));
+                        const tagsRow = createRow('Tags', dataset.tags.map(tag => {
+                            const tagElement = document.createElement('span');
+                            tagElement.className = 'badge bg-primary me-1';
+                            tagElement.style.cursor = 'pointer';
+                            tagElement.textContent = tag;
+                            tagElement.onclick = () => set_tag_as_query(tag);
+                            return tagElement.outerHTML;
+                        }).join(''));
 
-                                        <div class="col-md-4 col-12">
-                                            <span class=" text-secondary">
-                                                Tags
-                                            </span>
-                                        </div>
-                                        <div class="col-md-8 col-12">
-                                            ${dataset.tags.map(tag => `<span class="badge bg-primary me-1" style="cursor: pointer;" onclick="set_tag_as_query('${tag}')">${tag}</span>`).join('')}
-                                        </div>
+                        const downloadRow = document.createElement('div');
+                        downloadRow.className = 'row';
+                        const downloadCol = document.createElement('div');
+                        downloadCol.className = 'col-md-8 col-12';
+                        const downloadLink = document.createElement('a');
+                        downloadLink.className = 'btn btn-outline-primary btn-sm';
+                        downloadLink.href = dataset.files[0].url;
+                        downloadLink.textContent = `Download ${dataset.files.length} files (${get_total_size(dataset.files)} bytes)`;
+                        downloadCol.appendChild(downloadLink);
+                        downloadRow.appendChild(downloadCol);
 
-                                    </div>
+                        cardBody.appendChild(titleRow);
+                        cardBody.appendChild(publicationDate);
+                        cardBody.appendChild(descriptionRow);
+                        cardBody.appendChild(authorsRow);
+                        cardBody.appendChild(tagsRow);
+                        cardBody.appendChild(downloadRow);
 
-                                    <div class="row">
+                        const cardElement = document.createElement('div');
+                        cardElement.className = 'card';
+                        cardElement.appendChild(cardBody);
 
-                                        <div class="col-md-4 col-12">
-
-                                        </div>
-                                        <div class="col-md-8 col-12">
-                                            <a class="btn btn-outline-primary btn-sm" href="${dataset.files[0].url}">
-                                                Download ${dataset.files.length} files (${get_total_size(dataset.files)} bytes)
-                                            </a>
-                                            
-                                        </div>
-
-
-                                    </div>
-
-                                </div>
-                            </div>
-                        `;
-
-                        document.getElementById('results').appendChild(card);
+                        card.appendChild(cardElement);
+                        resultsContainer.appendChild(card);
                     });
                 });
         });
     });
 }
 
+function createRow(label, content) {
+    const row = document.createElement('div');
+    row.className = 'row mb-2';
+
+    const labelCol = document.createElement('div');
+    labelCol.className = 'col-md-4 col-12';
+    const labelSpan = document.createElement('span');
+    labelSpan.className = 'text-secondary';
+    labelSpan.textContent = label;
+    labelCol.appendChild(labelSpan);
+
+    const contentCol = document.createElement('div');
+    contentCol.className = 'col-md-8 col-12';
+    if (typeof content === 'string') {
+        const contentParagraph = document.createElement('p');
+        contentParagraph.className = 'card-text';
+        contentParagraph.textContent = content;
+        contentCol.appendChild(contentParagraph);
+    } else {
+        contentCol.innerHTML = content; // For tags or other HTML-safe content
+    }
+
+    row.appendChild(labelCol);
+    row.appendChild(contentCol);
+
+    return row;
+}
+
 function get_total_size(files) {
     return files.reduce((acc, file) => acc + file.size_in_bytes, 0);
-
 }
 
 function formatDate(dateString) {
-    const options = {day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric'};
+    const options = { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric' };
     const date = new Date(dateString);
     return date.toLocaleString('en-US', options);
 }
 
 function set_tag_as_query(tagName) {
     const section1 = document.getElementById('normal-search');
-    if (section1.style.display === 'block') {
-        const queryInput = document.getElementById('query');
-        queryInput.value = tagName.trim();
-        queryInput.dispatchEvent(new Event('input', { bubbles: true }));
-    } else {
-        const queryInput = document.getElementById('query-tags');
-        queryInput.value = tagName.trim();
-        queryInput.dispatchEvent(new Event('input', { bubbles: true }));
-    }
+    const queryInput = section1.style.display === 'block' ? document.getElementById('query') : document.getElementById('query-tags');
+    queryInput.value = tagName.trim();
+    queryInput.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
 function set_publication_type_as_query(publicationType) {
     const publicationTypeSelect = document.getElementById('publication_type');
     for (let i = 0; i < publicationTypeSelect.options.length; i++) {
         if (publicationTypeSelect.options[i].text === publicationType.trim()) {
-            // Set the value of the select to the value of the matching option
             publicationTypeSelect.value = publicationTypeSelect.options[i].value;
             break;
         }
@@ -211,60 +218,23 @@ function set_publication_type_as_query(publicationType) {
 document.getElementById('clear-filters').addEventListener('click', clearFilters);
 
 function clearFilters() {
-
-    // Reset the search query
-    let queryInput = document.querySelector('#query');
-    let queryTitle = document.querySelector('#query-title');
-    let queryAuthors = document.querySelector('#query-authors');
-    let queryTags = document.querySelector('#query-tags');
-    let queryDescription = document.querySelector('#query-description');
-    let queryBytes = document.querySelector('#query-max-size');
-    document.querySelector('#form-max-date').value = "";
-    document.querySelector('#form-min-date').value = "";
-    queryTitle.value = "";
-    queryAuthors.value = "";
-    queryTags.value = "";
-    queryDescription.value = "";
-    queryInput.value = "";
-    queryBytes.value = "";
-
-    // queryInput.dispatchEvent(new Event('input', {bubbles: true}));
-
-    // Reset the publication type to its default value
-    let publicationTypeSelect = document.querySelector('#publication_type');
-    publicationTypeSelect.value = "any"; // replace "any" with whatever your default value is
-    // publicationTypeSelect.dispatchEvent(new Event('input', {bubbles: true}));
-
-    // // Reset the sorting option
-    // let sortingOptions = document.querySelectorAll('[name="sorting"]');
-    // sortingOptions.forEach(option => {
-    //     option.checked = option.value == "newest"; // replace "default" with whatever your default value is
-    //     // option.dispatchEvent(new Event('input', {bubbles: true}));
-    // });
-
-    // Perform a new search with the reset filters
-    queryInput.dispatchEvent(new Event('input', { bubbles: true }));
+    const fieldsToClear = ['#query', '#query-title', '#query-authors', '#query-tags', '#query-description', '#query-max-size'];
+    fieldsToClear.forEach(selector => {
+        const field = document.querySelector(selector);
+        if (field) field.value = '';
+    });
+    document.querySelector('#form-max-date').value = '';
+    document.querySelector('#form-min-date').value = '';
+    document.querySelector('#publication_type').value = 'any';
+    document.getElementById('query').dispatchEvent(new Event('input', { bubbles: true }));
 }
 
-
 document.addEventListener('DOMContentLoaded', () => {
-
-    //let queryInput = document.querySelector('#query');
-    //queryInput.dispatchEvent(new Event('input', {bubbles: true}));
-
-    let urlParams = new URLSearchParams(window.location.search);
-    let queryParam = urlParams.get('query');
-
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryParam = urlParams.get('query');
+    const queryInput = document.getElementById('query');
     if (queryParam && queryParam.trim() !== '') {
-
-        const queryInput = document.getElementById('query');
-        queryInput.value = queryParam
-        queryInput.dispatchEvent(new Event('input', { bubbles: true }));
-        console.log("throw event");
-
-    } else {
-        const queryInput = document.getElementById('query');
-        queryInput.dispatchEvent(new Event('input', { bubbles: true }));
+        queryInput.value = queryParam;
     }
-
+    queryInput.dispatchEvent(new Event('input', { bubbles: true }));
 });

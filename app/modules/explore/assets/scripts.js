@@ -3,10 +3,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function send_query() {
+    console.log("send query...");
 
-    console.log("send query...")
-
-    document.getElementById('results').innerHTML = '';
+    const resultsContainer = document.getElementById('results');
+    resultsContainer.innerHTML = ''; // Clear previous results
     document.getElementById("results_not_found").style.display = "none";
     console.log("hide not found icon");
 
@@ -43,11 +43,10 @@ function send_query() {
             })
                 .then(response => response.json())
                 .then(data => {
-
                     console.log(data);
-                    document.getElementById('results').innerHTML = '';
+                    resultsContainer.innerHTML = ''; // Clear results
 
-                    // results counter
+                    // Update results counter
                     const resultCount = data.length;
                     const resultText = resultCount === 1 ? 'dataset' : 'datasets';
                     document.getElementById('results_number').textContent = `${resultCount} ${resultText} found`;
@@ -59,84 +58,87 @@ function send_query() {
                         document.getElementById("results_not_found").style.display = "none";
                     }
 
-
+                    // Render each dataset
                     data.forEach(dataset => {
-                        let card = document.createElement('div');
+                        const card = document.createElement('div');
                         card.className = 'col-12';
-                        card.innerHTML = `
+
+                        const cardContent = `
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center justify-content-between">
-                                        <h3><a href="${dataset.url}">${dataset.title}</a></h3>
+                                        <h3></h3>
                                         <div>
-                                            <span class="badge bg-primary" style="cursor: pointer;" onclick="set_publication_type_as_query('${dataset.publication_type}')">${dataset.publication_type}</span>
+                                            <span class="badge bg-primary" style="cursor: pointer;"></span>
                                         </div>
                                     </div>
-                                    <p class="text-secondary">${formatDate(dataset.created_at)}</p>
-
+                                    <p class="text-secondary"></p>
                                     <div class="row mb-2">
-
                                         <div class="col-md-4 col-12">
-                                            <span class=" text-secondary">
-                                                Description
-                                            </span>
+                                            <span class="text-secondary">Description</span>
                                         </div>
                                         <div class="col-md-8 col-12">
-                                            <p class="card-text">${dataset.description}</p>
+                                            <p class="card-text"></p>
                                         </div>
-
                                     </div>
-
                                     <div class="row mb-2">
-
                                         <div class="col-md-4 col-12">
-                                            <span class=" text-secondary">
-                                                Authors
-                                            </span>
+                                            <span class="text-secondary">Authors</span>
                                         </div>
-                                        <div class="col-md-8 col-12">
-                                            ${dataset.authors.map(author => `
-                                                <p class="p-0 m-0">${author.name}${author.affiliation ? ` (${author.affiliation})` : ''}${author.orcid ? ` (${author.orcid})` : ''}</p>
-                                            `).join('')}
-                                        </div>
-
+                                        <div class="col-md-8 col-12"></div>
                                     </div>
-
                                     <div class="row mb-2">
-
                                         <div class="col-md-4 col-12">
-                                            <span class=" text-secondary">
-                                                Tags
-                                            </span>
+                                            <span class="text-secondary">Tags</span>
                                         </div>
-                                        <div class="col-md-8 col-12">
-                                            ${dataset.tags.map(tag => `<span class="badge bg-primary me-1" style="cursor: pointer;" onclick="set_tag_as_query('${tag}')">${tag}</span>`).join('')}
-                                        </div>
-
+                                        <div class="col-md-8 col-12"></div>
                                     </div>
-
                                     <div class="row">
-
-                                        <div class="col-md-4 col-12">
-
-                                        </div>
+                                        <div class="col-md-4 col-12"></div>
                                         <div class="col-md-8 col-12">
-                                            <a href="${dataset.url}" class="btn btn-outline-primary btn-sm" id="search" style="border-radius: 5px;">
-                                                View dataset
-                                            </a>
-                                            <a href="/dataset/download/${dataset.id}" class="btn btn-outline-primary btn-sm" id="search" style="border-radius: 5px;">
-                                                Download (${dataset.total_size_in_human_format})
-                                            </a>
+                                            <a class="btn btn-outline-primary btn-sm" style="border-radius: 5px;">View dataset</a>
+                                            <a class="btn btn-outline-primary btn-sm" style="border-radius: 5px;">Download</a>
                                         </div>
-
-
                                     </div>
-
                                 </div>
                             </div>
                         `;
 
-                        document.getElementById('results').appendChild(card);
+                        card.innerHTML = cardContent;
+
+                        // Set dynamic content safely
+                        card.querySelector('h3').textContent = dataset.title;
+                        card.querySelector('.badge').textContent = dataset.publication_type;
+                        card.querySelector('.badge').onclick = () => set_publication_type_as_query(dataset.publication_type);
+                        card.querySelector('p.text-secondary').textContent = formatDate(dataset.created_at);
+                        card.querySelector('.card-text').textContent = dataset.description;
+
+                        const authorsContainer = card.querySelector('.col-md-8.col-12:nth-of-type(2)');
+                        dataset.authors.forEach(author => {
+                            const authorElement = document.createElement('p');
+                            authorElement.className = 'p-0 m-0';
+                            authorElement.textContent = `${author.name}${author.affiliation ? ` (${author.affiliation})` : ''}${author.orcid ? ` (${author.orcid})` : ''}`;
+                            authorsContainer.appendChild(authorElement);
+                        });
+
+                        const tagsContainer = card.querySelector('.col-md-8.col-12:nth-of-type(3)');
+                        dataset.tags.forEach(tag => {
+                            const tagElement = document.createElement('span');
+                            tagElement.className = 'badge bg-primary me-1';
+                            tagElement.style.cursor = 'pointer';
+                            tagElement.textContent = tag;
+                            tagElement.onclick = () => set_tag_as_query(tag);
+                            tagsContainer.appendChild(tagElement);
+                        });
+
+                        const viewDatasetLink = card.querySelector('a:nth-of-type(1)');
+                        viewDatasetLink.href = dataset.url;
+
+                        const downloadLink = card.querySelector('a:nth-of-type(2)');
+                        downloadLink.href = `/dataset/download/${dataset.id}`;
+                        downloadLink.textContent = `Download (${dataset.total_size_in_human_format})`;
+
+                        resultsContainer.appendChild(card);
                     });
                 });
         });
