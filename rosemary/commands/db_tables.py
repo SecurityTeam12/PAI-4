@@ -16,18 +16,16 @@ def db_tables():
     
     sql_command = "SHOW tables;"
         
-    # Execute the command
+    # Execute the command securely
     try:
         subprocess.run([
-    'mysql',
-    f'-h{mariadb_hostname}',
-    f'-u{mariadb_user}',
-    f'-p{mariadb_password}',
-    mariadb_database,
-    '-e',
-    sql_command
-], check=True)
+            'mysql',
+            '-h', mariadb_hostname,
+            '-u', mariadb_user,
+            f'-p{mariadb_password}',
+            mariadb_database,
+            '-e', sql_command
+        ], check=True)
     except subprocess.CalledProcessError as e:
         click.echo(click.style(f"Error opening MariaDB console: {e}", fg='red'))
 
-    

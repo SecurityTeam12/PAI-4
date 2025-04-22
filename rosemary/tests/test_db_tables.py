@@ -28,6 +28,6 @@ def test_db_tables(mock_run, mock_getenv, mock_env_vars):
 
     assert result.exit_code == 0
     mock_run.assert_called_once_with(
-        ['mysql', '-hlocalhost', '-uuvlhubdb_user', '-puvlhubdb_password', 'uvlhubdb_test', '-e', 'SHOW tables;'],
+        ['mysql', '-h', 'localhost', '-u', 'uvlhubdb_user', '-puvlhubdb_password', 'uvlhubdb_test', '-e', 'SHOW tables;'],
         check=True,
     )
