@@ -16,7 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5
+
 
       - name: Deploy to Render
         env:
