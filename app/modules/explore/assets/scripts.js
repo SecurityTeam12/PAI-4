@@ -167,6 +167,16 @@ function set_tag_as_query(tagName) {
     queryInput.dispatchEvent(new Event('input', {bubbles: true}));
 }
 
+function setSelectValueByText(selectElement, textValue) {
+    const trimmedValue = textValue.trim();
+    for (let i = 0; i < selectElement.options.length; i++) {
+        if (selectElement.options[i].text === trimmedValue) {
+            selectElement.value = selectElement.options[i].value;
+            break;
+        }
+    }
+}
+
 function createAuthorElement(author) {
     const element = document.createElement('p');
     element.className = 'p-0 m-0';
@@ -176,13 +186,7 @@ function createAuthorElement(author) {
 
 function set_publication_type_as_query(publicationType) {
     const publicationTypeSelect = document.getElementById('publication_type');
-    for (let i = 0; i < publicationTypeSelect.options.length; i++) {
-        if (publicationTypeSelect.options[i].text === publicationType.trim()) {
-            // Set the value of the select to the value of the matching option
-            publicationTypeSelect.value = publicationTypeSelect.options[i].value;
-            break;
-        }
-    }
+    setSelectValueByText(publicationTypeSelect, publicationType);
     publicationTypeSelect.dispatchEvent(new Event('input', {bubbles: true}));
 }
 

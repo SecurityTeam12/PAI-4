@@ -199,6 +199,16 @@ function get_total_size(files) {
     return files.reduce((acc, file) => acc + file.size_in_bytes, 0);
 }
 
+function setSelectValueByText(selectElement, textValue) {
+    const trimmedValue = textValue.trim();
+    for (let i = 0; i < selectElement.options.length; i++) {
+        if (selectElement.options[i].text === trimmedValue) {
+            selectElement.value = selectElement.options[i].value;
+            break;
+        }
+    }
+}
+
 function formatDate(dateString) {
     const options = { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric' };
     const date = new Date(dateString);
@@ -214,12 +224,7 @@ function set_tag_as_query(tagName) {
 
 function set_publication_type_as_query(publicationType) {
     const publicationTypeSelect = document.getElementById('publication_type');
-    for (let i = 0; i < publicationTypeSelect.options.length; i++) {
-        if (publicationTypeSelect.options[i].text === publicationType.trim()) {
-            publicationTypeSelect.value = publicationTypeSelect.options[i].value;
-            break;
-        }
-    }
+    setSelectValueByText(publicationTypeSelect, publicationType);
     publicationTypeSelect.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
