@@ -31,7 +31,7 @@ flamapy-bdd==2.0.0.dev1
 flamapy-fm==2.0.0.dev1
 flamapy-fw==2.0.0.dev1
 flamapy-sat==2.0.0.dev1
-Flask==3.1.0
+Flask==3.1.1
 Flask-Cors==5.0.1
 Flask-Login==0.6.3
 Flask-Mail==0.10.0
@@ -45,7 +45,7 @@ geventhttpclient==2.3.3
 graphviz==0.20.3
 greenlet==3.2.0
 gunicorn==23.0.0
-h11==0.14.0
+h11==0.16.0
 h2==4.1.0
 hpack==4.0.0
 hyperframe==6.0.1
